@@ -1,0 +1,8 @@
+description: |
+  A fake LED strip driver for testing purposes in Zephyr.
+  This binding describes a simulated LED strip with a configurable number
+  of chained LEDs.
+
+compatible: "zephyr,fake-led-strip"
+
+include: [led-strip.yaml]

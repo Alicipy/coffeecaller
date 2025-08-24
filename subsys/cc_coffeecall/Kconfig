@@ -1,0 +1,28 @@
+menu "CC CoffeeCall Subsystem"
+    config CC_COFFEECALL_SUBSYS
+        bool "Enable CoffeeCaller CoffeeCall Subsystem"
+        select CC_LIB
+        select CC_BROADCAST_SUBSYS
+        select SMF
+        select EVENTS
+        select WATCHDOG
+        default n
+
+    if CC_COFFEECALL_SUBSYS
+
+    menu "CoffeeCall configuration"
+
+    config CC_COFFEECALL_SUBSYS_SHELL
+        select SHELL
+        bool "Enable CoffeeCall Subsys Shell"
+        default n
+
+    config CC_COFFEECALL_CALL_ACTIVE_TIMEOUT
+       int "How many seconds the coffee caller should wait before signaling yay or nay"
+       default 30
+
+    endmenu
+
+    endif # CC_COFFEECALL_SUBSYS
+
+endmenu

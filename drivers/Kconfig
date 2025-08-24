@@ -1,0 +1,6 @@
+menu "Device Drivers"
+
+rsource "led_strip/Kconfig"
+rsource "pwm/Kconfig"
+
+endmenu

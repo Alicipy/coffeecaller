@@ -1,0 +1,36 @@
+menu "CC Temperature Subsystem"
+    config CC_TEMPERATURE_SUBSYS
+        bool "Enable CoffeeCaller Broadcast Subsystem"
+        select CC_BROADCAST_SUBSYS
+        select CBPRINTF_FP_SUPPORT
+        default n
+        
+    if CC_TEMPERATURE_SUBSYS
+
+    menu "Temperature sensor configuration"
+
+    choice CC_TEMPERATURE_SENSOR
+        prompt "Select temperature sensor type"
+        default CC_TEMPERATURE_SENSOR_FAKE if BOARD_NATIVE_SIM
+        default CC_TEMPERATURE_SENSOR_DHT if !BOARD_NATIVE_SIM
+
+    config CC_TEMPERATURE_SENSOR_DHT
+        bool "DHT temperature sensor"
+        select CONFIG_SENSOR
+        select CONFIG_SHT4X
+        select CONFIG_I2C
+        help
+          Enable DHT temperature sensor support
+
+    config CC_TEMPERATURE_SENSOR_FAKE
+        bool "Fake temperature sensor"
+        help
+          Enable fake temperature sensor for testing
+
+    endchoice
+
+    endmenu
+
+    endif # CC_TEMPERATURE_SUBSYS
+
+endmenu

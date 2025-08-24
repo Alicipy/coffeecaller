@@ -1,0 +1,7 @@
+menu "Coffee Caller Libraries"
+
+config CC_LIB
+    bool "Activates the CoffeeCall library"
+    default n
+
+endmenu

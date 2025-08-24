@@ -1,0 +1,6 @@
+config PWM_NATIVE_SIM
+	bool "Fake PWM driver"
+	default y
+	depends on DT_HAS_ZEPHYR_PWM_NATIVE_SIM_ENABLED
+	help
+      Enable support for a logging dummy PWM driver.

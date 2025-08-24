@@ -1,0 +1,10 @@
+sample:
+  name: CC Broadcast Subsystem Sample
+  description: Sample to show usage and validate build of the CC Broadcast Subsystem on supported boards.
+common:
+  build_only: true
+  integration_platforms:
+  - native_sim
+  - tiac_coffeecaller
+tests:
+  cc_broadcast.sample: {}

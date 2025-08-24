@@ -1,0 +1,10 @@
+sample:
+  name: CC CoffeeCall Subsystem Sample
+  description: Sample to interact with the CoffeeCall subsystem via Shell commands on supported boards.
+common:
+  build_only: true
+  integration_platforms:
+  - native_sim
+  - tiac_coffeecaller
+tests:
+  cc_coffeecall.sample: {}

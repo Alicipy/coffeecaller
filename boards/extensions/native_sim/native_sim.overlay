@@ -1,0 +1,54 @@
+
+#include <zephyr/dt-bindings/pwm/pwm.h>
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+#include <zephyr/dt-bindings/led/led.h>
+
+/ {
+
+	 buttons {
+		 compatible = "gpio-keys";
+		 button0: button_0 {
+			 gpios = <&gpio0 12 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			 label = "Push button switch 0";
+			 zephyr,code = <INPUT_KEY_0>;
+		 };
+	 };
+
+	counter_watchdog: counting_wdt {
+		compatible = "zephyr,counter-watchdog";
+		counter = <&counter0>;
+		status = "okay";
+	};
+
+	pwm0: dummy_pwm {
+		compatible = "zephyr,pwm-native-sim";
+		#pwm-cells = <2>;
+		frequency = <1234>;
+		status = "okay";
+	};
+
+	pwmleds {
+		compatible = "pwm-leds";
+
+		pwm_led0: pwm_led_0 {
+			pwms = <&pwm0 0 PWM_HZ(440) PWM_POLARITY_NORMAL>;
+			label = "Buzzer PWM LED";
+		};
+	};
+
+	led_strip: fake_led_strip {
+		compatible = "zephyr,fake-led-strip";
+		chain-length = <4>;
+		color-mapping = <LED_COLOR_ID_RED
+						 LED_COLOR_ID_GREEN
+						 LED_COLOR_ID_BLUE>;
+		status = "okay";
+	};
+
+	aliases {
+		sw0 = &button0;
+		led-strip = &led_strip;
+		buzzer0 = &pwm_led0;
+		watchdog0 = &counter_watchdog;
+	};
+};

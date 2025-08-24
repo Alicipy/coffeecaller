@@ -1,0 +1,10 @@
+sample:
+  name: CC CoffeeCall App
+  description: App that combines the subsystems for the coffeecaller.
+common:
+  integration_platforms:
+  - native_sim
+  - tiac_coffeecaller
+tests:
+  app.coffeecaller:
+    build_only: true

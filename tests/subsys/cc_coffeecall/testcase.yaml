@@ -1,0 +1,53 @@
+common:
+  tags: cc_coffeecall
+  platform_allow:
+    - native_sim
+    - tiac_coffeecaller
+  integration_platforms:
+    - native_sim
+    - tiac_coffeecaller
+  harness: shell
+
+
+tests:
+  subsys.cc_coffeecall.shell.pressed_no_response:
+    harness_config:
+      shell_commands:
+        - command: cc press_button
+        - command: kernel sleep 1500
+          expected: ".*announcing 'no'"
+  subsys.cc_coffeecall.shell.pressed_got_response:
+    harness_config:
+      shell_commands:
+        - command: cc press_button
+        - command: cc recv_take_part_msg 123 1
+        - command: kernel sleep 1500
+          expected: ".*announcing 'yes'"
+  subsys.cc_coffeecall.shell.got_single_recv_message_only:
+    harness_config:
+      shell_commands:
+        - command: cc recv_take_part_msg 123 1
+        - command: kernel sleep 1500
+          expected: ".*announcing 'no'"
+  subsys.cc_coffeecall.shell.got_two_recv_messages_not_pressing:
+    harness_config:
+      shell_commands:
+        - command: cc recv_take_part_msg 123 1
+        - command: kernel sleep 1500
+          expected: ".*announcing 'no'"
+  subsys.cc_coffeecall.shell.got_recv_message_taking_part:
+    harness_config:
+      shell_commands:
+        - command: cc recv_take_part_msg 123 1
+        - command: kernel sleep 200
+        - command: cc press_button
+        - command: kernel sleep 1000
+          expected: ".*announcing 'yes'"
+  subsys.cc_coffeecall.shell.got_two_recv_messages_not_pressing:
+    harness_config:
+      shell_commands:
+        - command: cc recv_take_part_msg 123 1
+        - command: kernel sleep 200
+        - command: cc recv_take_part_msg 456 1
+        - command: kernel sleep 1000
+          expected: ".*announcing 'yes'"

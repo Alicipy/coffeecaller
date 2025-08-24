@@ -1,0 +1,3 @@
+rsource "cc_broadcast/Kconfig"
+rsource "cc_coffeecall/Kconfig"
+rsource "cc_temperature/Kconfig"

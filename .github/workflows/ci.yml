@@ -1,0 +1,80 @@
+name: "Integration checks"
+
+defaults:
+  run:
+    working-directory: ws
+
+on:
+  schedule:
+    - cron: "31 4 * * *"
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: "Build and test coffeecaller"
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/zephyrproject-rtos/ci:v0.27.3
+      options: '--entrypoint /bin/bash'
+    env:
+      ZEPHYR_SDK_INSTALL_DIR: /opt/toolchains/zephyr-sdk-0.17.0
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          path: ws/coffeecaller
+
+      - name: Setup Zephyr workspace
+        run: |
+          west init -l ./coffeecaller
+          west update
+
+      - name: Build all sample integrations
+        run: |
+          west twister --integration -T ./coffeecaller/samples/
+
+      - name: Check CoffeeCaller application is building
+        run: |
+          west twister --integration -T ./coffeecaller/applications
+
+      - name: Run all tests
+        run: |
+          west twister \
+            --outdir twister-out --inline-logs \
+            --coverage --coverage-basedir ./coffeecaller \
+            -T ./coffeecaller/tests
+
+      - name: Upload Twister Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: twister-reports
+          path: |
+            ws/twister-out/coverage/index.html
+            ws/twister-out/twister.json
+            ws/twister-out/twister.xml
+            ws/twister-out/twister_report.xml
+
+  publish-test-results:
+    name: "Publish Tests Results"
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+    if: (!cancelled())
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: "artifacts/**/twister_report.xml"

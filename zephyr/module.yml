@@ -1,0 +1,19 @@
+name: coffeecaller
+build:
+  # root cmake script
+  cmake: .
+  # root kconfig file
+  kconfig: Kconfig
+  settings:
+    # make custom boards available (in ./boards/)
+    board_root: .
+    # make custom devicetree bindings available (in ./dts/)
+    dts_root: .
+
+# pointed to out of tree boards for Zephyr test runner (twister)
+boards:
+  - boards
+
+# pointed to out of tree samples for Zephyr test runner (twister)
+samples:
+  - samples

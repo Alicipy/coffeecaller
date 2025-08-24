@@ -1,0 +1,84 @@
+menu "CoffeeCaller Broadcast Subsystem"
+    config CC_BROADCAST_SUBSYS
+        bool "Enable CoffeeCaller Broadcast Subsystem"
+        select NETWORKING
+        select HW_INFO
+        select JSON_LIBRARY
+        default n
+
+    config CC_BROADCAST_SUBSYS_MAX_CLIENTS
+        int "Maximum number of CoffeeCaller Broadcast clients"
+        range 1 32
+        default 8
+        help
+          This option sets the maximum number of clients that can be registered
+          with the CoffeeCaller Broadcast subsystem. Adjust based on expected usage.
+
+    config CC_BROADCAST_SUBSYS_MAX_TYPE_LEN
+        int "Maximum length of broadcast type"
+        range 1 32
+        default 16
+        help
+          This option sets the maximum length of the broadcast type string.
+          It should be sufficient to accommodate the expected broadcast type names.
+
+    config CC_BROADCAST_SUBSYS_MAX_PAYLOAD_LEN
+        int "Maximum length of broadcast payload"
+        default 128
+        help
+          This option sets the maximum length of the broadcast message payload that can be
+          handled by the CoffeeCaller Broadcast subsystem. It should be large enough
+          to accommodate the expected payload sizes.
+
+    choice CC_BROADCAST_SUBSYS_TRANSPORT
+        prompt "Transport used to send and receive messages"
+        default TRANSPORT_LOCALQUEUE if BOARD_NATIVE_SIM
+        default TRANSPORT_OPENTHREAD if !BOARD_NATIVE_SIM
+        help
+          Select the backend transport mechanism used by the broadcast subsystem
+          for sending and receiving messages.
+
+    config TRANSPORT_OPENTHREAD
+        bool "OpenThread transport"
+        select OPENTHREAD_COAP
+        select NET_L2_OPENTHREAD
+        help
+          Use OpenThread to send and receive messages between nodes.
+
+    config TRANSPORT_LOCALQUEUE
+        bool "Local queue transport"
+        help
+          Use a local software queue to send and receive messages.
+          No actual network communication will occur.
+    endchoice
+
+    # Set some default values for OpenThread
+    if TRANSPORT_OPENTHREAD
+
+    config OPENTHREAD_PING_SENDER
+        bool
+        default y
+
+    config OPENTHREAD_PANID
+        int
+        default 1631
+
+    config OPENTHREAD_XPANID
+        string
+        default "c0:ff:ee:11:22:33:44:55"
+
+    config OPENTHREAD_NETWORKKEY
+        string
+        default "c0:ff:ee:ca:ll:ee:aa:bb:cc:dd:ee:ff:cc:c0:ff:ee"
+
+    config OPENTHREAD_CHANNEL
+        int
+        default 15
+
+    config OPENTHREAD_NETWORK_NAME
+        string
+        default "CoffeeCaller"
+
+    endif # TRANSPORT_OPENTHREAD
+
+endmenu

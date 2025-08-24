@@ -1,0 +1,3 @@
+add_subdirectory(cc_broadcast)
+add_subdirectory(cc_temperature)
+add_subdirectory(cc_coffeecall)

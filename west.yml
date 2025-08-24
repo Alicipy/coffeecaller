@@ -1,0 +1,20 @@
+manifest:
+  remotes:
+    - name: zephyrproject-rtos
+      url-base: https://github.com/zephyrproject-rtos
+
+  projects:
+    - name: zephyr
+      remote: zephyrproject-rtos
+      revision: v4.1.0
+      clone-depth: 1
+      import:
+        name-allowlist:
+          - cmsis
+          - hal_st # for ST sensors
+          - hal_nordic
+          - libmetal
+          - mbedtls
+          - mcuboot
+          - open-amp
+          - openthread

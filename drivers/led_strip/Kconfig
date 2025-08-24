@@ -1,0 +1,6 @@
+config FAKE_LED_STRIP
+	bool "Fake LED STRIP"
+	default y
+	depends on DT_HAS_ZEPHYR_FAKE_LED_STRIP_ENABLED
+	help
+      Enable support for the fake LED strip.

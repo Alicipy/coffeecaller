@@ -1,0 +1,16 @@
+common:
+  tags: cc_broadcast
+  harness: ztest
+
+tests:
+  subsys.cc_broadcast.basic_executable:
+    platform_allow:
+      - native_sim
+    integration_platforms:
+      - native_sim
+  subsys.cc_broadcast.test_compilable:
+    #depends_on: openthread
+    platform_allow:
+      - tiac_coffeecaller
+    integration_platforms:
+      - tiac_coffeecaller

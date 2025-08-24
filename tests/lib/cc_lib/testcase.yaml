@@ -1,0 +1,6 @@
+tests:
+  aldrin.buzzer:
+    platform_allow: native_sim
+    tags:
+    - aldrin
+    - cc_lib
