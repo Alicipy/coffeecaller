@@ -54,12 +54,14 @@ static void start_participant_wait_timer(struct s_object* s)
                   K_FOREVER);
 }
 
-static void s_start_run(void* o)
+static enum smf_state_result s_start_run(void* o)
 {
     struct s_object* s = o;
     LOG_INF("state change start -> idle");
     cc_leds_all_off();
     smf_set_state(SMF_CTX(s), &cc_states[S_IDLE]);
+
+    return SMF_EVENT_HANDLED;
 }
 
 static void s_idle_entry(void* o)
@@ -70,7 +72,7 @@ static void s_idle_entry(void* o)
     clear_participant_list(&s->participant_list);
 }
 
-static void s_idle_run(void* o)
+static enum smf_state_result s_idle_run(void* o)
 {
     struct s_object* s = o;
     LOG_DBG("idle run with %d", s->events);
@@ -88,7 +90,7 @@ static void s_idle_run(void* o)
         if (status < 0)
         {
             LOG_ERR("Failed to add participant to list");
-            return;
+            return SMF_EVENT_HANDLED;
         }
         assert(status > 0);
 
@@ -97,6 +99,8 @@ static void s_idle_run(void* o)
 
         smf_set_state(SMF_CTX(s), &cc_states[S_ACTIVE_CALL]);
     }
+
+    return SMF_EVENT_HANDLED;
 }
 
 static void announce_coffee_call_yes()
@@ -135,7 +139,7 @@ static void s_active_call_entry(void* o)
 }
 
 
-static void s_active_call_run(void* o)
+static enum smf_state_result s_active_call_run(void* o)
 {
     struct s_object* s = o;
 
@@ -152,7 +156,7 @@ static void s_active_call_run(void* o)
         if (status < 0)
         {
             LOG_ERR("Failed to add participant to list");
-            return;
+            return SMF_EVENT_HANDLED;
         }
         if (status == 0)
         {
@@ -171,6 +175,8 @@ static void s_active_call_run(void* o)
         announce_coffee_call_result(s);
         smf_set_state(SMF_CTX(s), &cc_states[S_IDLE]);
     }
+
+    return SMF_EVENT_HANDLED;
 }
 
 static void coffee_call_timer_end(struct k_timer* timer_id)
